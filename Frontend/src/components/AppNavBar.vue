@@ -30,11 +30,14 @@ const toggleMenu = () => {
     </button>
     <nav class="hidden lg:flex space-x-4 text-white">
       <RouterLink to="/" class="hover:text-gray-200 transition duration-300">Accueil</RouterLink>
-      <RouterLink to="/signup" class="hover:text-gray-200 transition duration-300"
+      <RouterLink to="/Register" class="hover:text-gray-200 transition duration-300"
         >Inscription</RouterLink
       >
       <RouterLink to="/profil" class="hover:text-gray-200 transition duration-300"
         >Profil</RouterLink
+      >
+      <RouterLink to="/Login" class="hover:text-gray-200 transition duration-300"
+        >Connexion</RouterLink
       >
     </nav>
     <transition name="slide-fade">
@@ -67,7 +70,7 @@ const toggleMenu = () => {
             >Accueil</RouterLink
           >
           <RouterLink
-            to="/signup"
+            to="/Register"
             class="block py-2 hover:text-gray-200 transition duration-300"
             @click="toggleMenu"
             >Inscription</RouterLink
@@ -77,6 +80,12 @@ const toggleMenu = () => {
             class="block py-2 hover:text-gray-200 transition duration-300"
             @click="toggleMenu"
             >Profil</RouterLink
+          >
+          <RouterLink
+            to="/Login"
+            class="block py-2 hover:text-gray-200 transition duration-300"
+            @click="toggleMenu"
+            >Connexion</RouterLink
           >
         </nav>
       </div>

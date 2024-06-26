@@ -31,6 +31,11 @@ RUN chown -R www-data:www-data /var/www/html
 RUN chmod -R 755 /var/www/html
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Vider le cache Laravel
+RUN php artisan config:cache
+RUN php artisan route:cache
+RUN php artisan view:cache
+
 # Configuration Apache
 RUN echo "<Directory /var/www/html/public>\n\
     Options Indexes FollowSymLinks\n\
