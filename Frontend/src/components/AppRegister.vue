@@ -11,7 +11,7 @@
           <label for="name" class="block text-lg font-medium text-white">First Name</label>
           <input
             type="text"
-            v-model="user.name"
+            v-model="users.name"
             name="name"
             id="name"
             class="form-control mt-1 block w-full px-3 py-2 bg-white bg-opacity-20 text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-blue-300"
@@ -21,7 +21,7 @@
           <label for="email" class="block text-lg font-medium text-white">Email</label>
           <input
             type="email"
-            v-model="user.email"
+            v-model="users.email"
             name="email"
             id="email"
             class="form-control mt-1 block w-full px-3 py-2 bg-white bg-opacity-20 text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-blue-300"
@@ -31,7 +31,7 @@
           <label for="password" class="block text-lg font-medium text-white">Password</label>
           <input
             type="password"
-            v-model="user.password"
+            v-model="users.password"
             name="password"
             id="password"
             class="form-control mt-1 block w-full px-3 py-2 bg-white bg-opacity-20 text-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-opacity-50 focus:ring-blue-300"
@@ -56,24 +56,25 @@ export default {
   name: 'AppRegister',
   data() {
     return {
-      user: {
+      users: {
         name: '',
         email: '',
         password: ''
-      }
+      },
+      error: ''
     }
   },
   methods: {
     saveData() {
       axios
-        .post('http://localhost:8000/api/register', this.user, { withCredentials: true })
+        .post('http://localhost:8000/api/register', this.users, { withCredentials: true })
         .then(({ data }) => {
           console.log(data)
           alert('saved')
         })
         .catch((err) => {
           console.error(err)
-          alert('failed')
+          this.error = err.response ? err.response.data.message : 'An error occurred'
         })
     }
   }

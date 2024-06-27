@@ -1,11 +1,18 @@
 <script setup>
 import { ref } from 'vue'
 import { RouterLink } from 'vue-router'
+import { useAuthStore } from '../stores/auth'
 
+const authStore = useAuthStore()
 const isOpen = ref(false)
 
 const toggleMenu = () => {
   isOpen.value = !isOpen.value
+}
+
+const logout = () => {
+  authStore.logout()
+  // Vous pouvez également appeler une API pour déconnecter l'utilisateur côté serveur
 }
 </script>
 
@@ -30,15 +37,17 @@ const toggleMenu = () => {
     </button>
     <nav class="hidden lg:flex space-x-4 text-white">
       <RouterLink to="/" class="hover:text-gray-200 transition duration-300">Accueil</RouterLink>
-      <RouterLink to="/Register" class="hover:text-gray-200 transition duration-300"
+      <RouterLink v-if="!authStore.isAuthenticated" to="/Register" class="hover:text-gray-200 transition duration-300"
         >Inscription</RouterLink
       >
-      <RouterLink to="/profil" class="hover:text-gray-200 transition duration-300"
+      <RouterLink v-if="authStore.isAuthenticated" to="/profil" class="hover:text-gray-200 transition duration-300"
         >Profil</RouterLink
       >
-      <RouterLink to="/Login" class="hover:text-gray-200 transition duration-300"
+      <RouterLink v-if="!authStore.isAuthenticated" to="/Login" class="hover:text-gray-200 transition duration-300"
         >Connexion</RouterLink
       >
+      <button v-if="authStore.isAuthenticated" @click="logout" class="hover:text-gray-200 transition duration-300"
+        >Déconnexion</button>
     </nav>
     <transition name="slide-fade">
       <div
@@ -70,28 +79,39 @@ const toggleMenu = () => {
             >Accueil</RouterLink
           >
           <RouterLink
+            v-if="!authStore.isAuthenticated"
             to="/Register"
             class="block py-2 hover:text-gray-200 transition duration-300"
             @click="toggleMenu"
             >Inscription</RouterLink
           >
           <RouterLink
+            v-if="authStore.isAuthenticated"
             to="/profil"
             class="block py-2 hover:text-gray-200 transition duration-300"
             @click="toggleMenu"
             >Profil</RouterLink
           >
           <RouterLink
+            v-if="!authStore.isAuthenticated"
             to="/Login"
             class="block py-2 hover:text-gray-200 transition duration-300"
             @click="toggleMenu"
             >Connexion</RouterLink
           >
+          <button
+            v-if="authStore.isAuthenticated"
+            @click="() => { toggleMenu(); logout(); }"
+            class="block py-2 hover:text-gray-200 transition duration-300"
+          >
+            Déconnexion
+          </button>
         </nav>
       </div>
     </transition>
   </header>
 </template>
+
 
 <style scoped>
 .slide-fade-enter-active,

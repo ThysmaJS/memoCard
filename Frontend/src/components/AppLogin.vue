@@ -1,3 +1,5 @@
+
+
 <template>
   <main
     class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 to-green-400 text-white"
@@ -35,37 +37,36 @@
   </main>
 </template>
 
-<script>
+<script setup>
+import { useAuthStore } from '../stores/auth'
 import axios from 'axios'
+import { useRouter } from 'vue-router'
+import { ref } from 'vue'
 
-export default {
-  name: 'AppLogin',
-  data() {
-    return {
-      user: {
-        email: '',
-        password: ''
-      }
+
+const authStore = useAuthStore()
+const router = useRouter()
+const user = ref({
+  email: '',
+  password: ''
+})
+
+const LoginData = async () => {
+  try {
+    const response = await axios.post('/api/login', user.value, {
+      withCredentials: true
+    })
+    const data = response.data
+    if (data.status === true) {
+      authStore.login()
+      router.push({ name: 'home' }) // Redirection vers la page d'accueil
+      alert('Login Successfully')
+    } else {
+      alert('Login failed')
     }
-  },
-  methods: {
-    async LoginData() {
-      try {
-        const response = await axios.post('/api/login', this.user, {
-          withCredentials: true
-        })
-        const data = response.data
-        if (data.status === true) {
-          alert('Login Successfully')
-          this.$router.push({ name: 'HelloWorld' })
-        } else {
-          alert('Login failed')
-        }
-      } catch (error) {
-        console.error(error)
-        alert('Error, please try again')
-      }
-    }
+  } catch (error) {
+    console.error(error)
+    alert('Error, please try again')
   }
 }
 </script>
