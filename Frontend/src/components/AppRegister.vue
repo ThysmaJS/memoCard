@@ -67,7 +67,7 @@ export default {
   methods: {
     saveData() {
       axios
-        .post('http://localhost:8000/api/register', this.users, { withCredentials: true })
+        .post('http://localhost:8000/api/auth/register', this.users, { withCredentials: true })
         .then(({ data }) => {
           console.log(data)
           alert('saved')

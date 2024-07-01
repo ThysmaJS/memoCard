@@ -1,5 +1,3 @@
-
-
 <template>
   <main
     class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 to-green-400 text-white"
@@ -43,7 +41,6 @@ import axios from 'axios'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
-
 const authStore = useAuthStore()
 const router = useRouter()
 const user = ref({
@@ -53,7 +50,7 @@ const user = ref({
 
 const LoginData = async () => {
   try {
-    const response = await axios.post('/api/login', user.value, {
+    const response = await axios.post('/api/auth/login', user.value, {
       withCredentials: true
     })
     const data = response.data
