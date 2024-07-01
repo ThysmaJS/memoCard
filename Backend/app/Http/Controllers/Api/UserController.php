@@ -99,27 +99,4 @@ class UserController extends Controller
             ], 500);
         }
     }
-
-    /**
-     * Get the profile of the authenticated user
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function getUserProfile()
-    {
-        try {
-            $user = Auth::user();
-
-            return response()->json([
-                'status' => true,
-                'message' => 'User Profile Retrieved Successfully',
-                'user' => $user
-            ], 200);
-
-        } catch (\Throwable $th) {
-            return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
-        }
-    }
 }

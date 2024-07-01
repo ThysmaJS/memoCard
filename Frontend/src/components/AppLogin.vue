@@ -5,7 +5,7 @@
     <div class="w-full max-w-md p-8 bg-white bg-opacity-10 rounded-lg shadow-lg backdrop-blur-md">
       <h2 class="text-4xl font-bold mb-6 text-white text-center">Login</h2>
 
-      <form @submit.prevent="LoginData" class="space-y-4">
+      <form @submit.prevent="login" class="space-y-4">
         <div class="form-group">
           <label for="email" class="block text-lg font-medium text-white">Email</label>
           <input
@@ -37,7 +37,7 @@
 
 <script setup>
 import { useAuthStore } from '../stores/auth'
-import axios from 'axios'
+import axios from '../axios'
 import { useRouter } from 'vue-router'
 import { ref } from 'vue'
 
@@ -48,13 +48,12 @@ const user = ref({
   password: ''
 })
 
-const LoginData = async () => {
+const login = async () => {
   try {
-    const response = await axios.post('/api/auth/login', user.value, {
-      withCredentials: true
-    })
+    const response = await axios.post('/auth/login', user.value)
     const data = response.data
     if (data.status === true) {
+      // localStorage.setItem('token', data.token)
       authStore.login()
       router.push({ name: 'home' }) // Redirection vers la page d'accueil
       alert('Login Successfully')

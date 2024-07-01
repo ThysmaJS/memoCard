@@ -18,4 +18,8 @@ use App\Http\Controllers\Api\UserController;
 
 Route::post('/auth/register', [UserController::class, 'createUser']);
 Route::post('/auth/login', [UserController::class, 'loginUser'])->name('login');
-Route::middleware('auth:sanctum')->get('/user-profile', [UserController::class, 'getUserProfile']);
+
+Route::middleware('auth:sanctum')->get('/user', function (Request $request){
+    return $request-> user();
+});
+
