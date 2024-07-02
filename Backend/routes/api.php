@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ThemeController;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,11 +17,14 @@ use App\Http\Controllers\Api\UserController;
 |
 */
 
-
 Route::post('/auth/register', [UserController::class, 'createUser']);
 Route::post('/auth/login', [UserController::class, 'loginUser'])->name('login');
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request){
-    return $request-> user();
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+    Route::resource('categories', CategoryController::class);
+    Route::get('/categories/{category}/themes', [ThemeController::class, 'index']);
+    Route::resource('themes', ThemeController::class)->except(['index']);
 });
-

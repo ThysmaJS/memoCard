@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Models\User;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
@@ -98,5 +99,10 @@ class UserController extends Controller
                 'message' => $th->getMessage()
             ], 500);
         }
+    }
+
+    public function categories()
+    {
+        return $this->hasMany(Category::class);
     }
 }
