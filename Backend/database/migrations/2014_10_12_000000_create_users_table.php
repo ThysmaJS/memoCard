@@ -18,7 +18,10 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();
+            $table->boolean('daily_reminder')->default(false);
+            $table->smallInteger('review_level')->default(0); // Ajout d'une valeur par défaut pour éviter les erreurs de non-nullité
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

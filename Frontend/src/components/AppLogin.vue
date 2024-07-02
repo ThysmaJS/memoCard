@@ -53,7 +53,7 @@ const login = async () => {
     const response = await axios.post('/auth/login', user.value)
     const data = response.data
     if (data.status === true) {
-      // localStorage.setItem('token', data.token)
+      localStorage.setItem('token', data.token)
       authStore.login()
       router.push({ name: 'home' }) // Redirection vers la page d'accueil
       alert('Login Successfully')
