@@ -2,8 +2,10 @@
 
 namespace App\Providers;
 
+use App\Models\Card;
 use App\Models\Theme;
 use App\Models\Category;
+use App\Policies\CardPolicy;
 use App\Policies\ThemePolicy;
 use App\Policies\CategoryPolicy;
 use Illuminate\Support\Facades\Gate;
@@ -15,6 +17,7 @@ class AuthServiceProvider extends ServiceProvider
         // Enregistrement de la policy
         Category::class => CategoryPolicy::class,
         Theme::class => ThemePolicy::class,
+        Card::class => CardPolicy::class,
     ];
 
     public function boot()

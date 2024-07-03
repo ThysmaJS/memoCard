@@ -51,4 +51,10 @@ class ThemeController extends Controller
         $theme->delete();
         return response()->json(null, 204);
     }
+
+    public function allThemes()
+    {
+        $themes = Theme::where('user_id', auth()->id())->get();
+        return response()->json($themes);
+    }
 }

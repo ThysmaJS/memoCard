@@ -35,6 +35,16 @@
         >
           Thèmes
         </button>
+        <button
+          @click="activeTab = 'cards'"
+          :class="{
+            'bg-blue-500 text-white': activeTab === 'cards',
+            'bg-gray-200 text-black': activeTab !== 'cards'
+          }"
+          class="px-4 py-2 rounded focus:outline-none"
+        >
+          Cartes
+        </button>
       </div>
 
       <!-- Catégories -->
@@ -180,6 +190,101 @@
           </div>
         </div>
       </div>
+
+      <!-- Cartes -->
+      <div v-if="activeTab === 'cards'" class="bg-white bg-opacity-10 rounded-lg p-4 shadow-lg">
+        <h2 class="text-xl font-semibold mb-4">Cartes</h2>
+        <select
+          v-model="selectedThemeId"
+          @change="fetchCards"
+          class="border rounded w-full p-2 mb-4 text-black"
+        >
+          <option value="" disabled>Choisir un thème</option>
+          <option v-for="theme in allThemes" :key="theme.id" :value="theme.id">
+            {{ theme.name }}
+          </option>
+        </select>
+        <ul class="list-disc list-inside mb-4" v-if="selectedThemeId">
+          <li v-for="card in cards" :key="card.id">
+            {{ card.front }} / {{ card.back }}
+            <div class="flex space-x-2 mt-2">
+              <button @click="editCard(card)" class="bg-yellow-500 text-white px-2 py-1 rounded">
+                Modifier
+              </button>
+              <button @click="deleteCard(card.id)" class="bg-red-500 text-white px-2 py-1 rounded">
+                Supprimer
+              </button>
+            </div>
+          </li>
+        </ul>
+        <button
+          @click="showCardForm = true"
+          v-if="!showEditCardForm"
+          class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mb-4"
+        >
+          Créer des cartes
+        </button>
+        <div v-if="showCardForm && !showEditCardForm" class="mt-4 text-black">
+          <div v-for="(card, index) in newCards" :key="index" class="mb-4">
+            <input
+              v-model="card.front"
+              placeholder="Recto de la carte"
+              class="border rounded w-full p-2 mb-2"
+            />
+            <input
+              v-model="card.back"
+              placeholder="Verso de la carte"
+              class="border rounded w-full p-2 mb-2"
+            />
+          </div>
+          <div class="flex space-x-2">
+            <button
+              @click="addCardFields"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Ajouter une autre carte
+            </button>
+            <button
+              @click="saveCards"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Ajouter
+            </button>
+            <button
+              @click="cancelCardAction"
+              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+        <div v-if="showEditCardForm && !showCardForm" class="mt-4 text-black">
+          <input
+            v-model="currentCard.front"
+            placeholder="Recto de la carte"
+            class="border rounded w-full p-2 mb-2"
+          />
+          <input
+            v-model="currentCard.back"
+            placeholder="Verso de la carte"
+            class="border rounded w-full p-2 mb-2"
+          />
+          <div class="flex space-x-2">
+            <button
+              @click="updateCard"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Mettre à jour
+            </button>
+            <button
+              @click="cancelCardAction"
+              class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded"
+            >
+              Annuler
+            </button>
+          </div>
+        </div>
+      </div>
     </section>
   </main>
 </template>
@@ -194,11 +299,16 @@ export default {
       activeTab: 'categories', // Default active tab
       categories: [], // Initialize empty categories
       themes: [], // Initialize empty themes
+      allThemes: [], // Initialize empty allThemes
+      cards: [], // Initialize empty cards
       selectedCategoryId: null, // Track selected category for themes
+      selectedThemeId: null, // Track selected theme for cards
       showCategoryForm: false,
       showThemeForm: false,
+      showCardForm: false,
       showEditCategoryForm: false,
       showEditThemeForm: false,
+      showEditCardForm: false,
       currentCategory: {
         id: null,
         name: '',
@@ -209,12 +319,20 @@ export default {
         name: '',
         description: '',
         category_id: null
-      }
+      },
+      currentCard: {
+        id: null,
+        front: '',
+        back: '',
+        theme_id: null
+      },
+      newCards: [{ front: '', back: '' }] // Default 1 new card
     }
   },
   created() {
     this.fetchUserProfile()
     this.fetchCategories() // Fetch categories when component is created
+    this.fetchAllThemes() // Fetch all themes for cards tab
   },
   methods: {
     async fetchUserProfile() {
@@ -243,6 +361,26 @@ export default {
         }
       } else {
         this.themes = []
+      }
+    },
+    async fetchAllThemes() {
+      try {
+        const response = await axios.get('/themes')
+        this.allThemes = response.data
+      } catch (error) {
+        console.error('Erreur lors de la récupération de tous les thèmes:', error)
+      }
+    },
+    async fetchCards() {
+      if (this.selectedThemeId) {
+        try {
+          const response = await axios.get(`/themes/${this.selectedThemeId}/cards`)
+          this.cards = response.data
+        } catch (error) {
+          console.error('Erreur lors de la récupération des cartes:', error)
+        }
+      } else {
+        this.cards = []
       }
     },
     async saveCategory() {
@@ -327,6 +465,62 @@ export default {
       this.currentTheme = { id: null, name: '', description: '', category_id: null }
       this.showThemeForm = false
       this.showEditThemeForm = false
+    },
+    async saveCards() {
+      if (this.newCards.length < 1) {
+        alert('Veuillez ajouter au moins 1 carte.')
+        return
+      }
+
+      const cardsToSave = this.newCards.map((card) => ({
+        ...card,
+        theme_id: this.selectedThemeId
+      }))
+
+      try {
+        const response = await axios.post('/cards/batch', { cards: cardsToSave })
+        this.cards.push(...response.data)
+        this.newCards = [{ front: '', back: '' }] // Reset new cards
+        this.showCardForm = false
+      } catch (error) {
+        console.error('Erreur lors de la création des cartes:', error)
+      }
+    },
+    async editCard(card) {
+      this.currentCard = { ...card }
+      this.showEditCardForm = true
+      this.showCardForm = false
+    },
+    async updateCard() {
+      try {
+        const response = await axios.put(`/cards/${this.currentCard.id}`, {
+          front: this.currentCard.front,
+          back: this.currentCard.back
+        })
+        const index = this.cards.findIndex((card) => card.id === this.currentCard.id)
+        this.cards.splice(index, 1, response.data)
+        this.currentCard = { id: null, front: '', back: '', theme_id: null }
+        this.showEditCardForm = false
+      } catch (error) {
+        console.error('Erreur lors de la mise à jour de la carte:', error)
+      }
+    },
+    async deleteCard(id) {
+      try {
+        await axios.delete(`/cards/${id}`)
+        this.cards = this.cards.filter((card) => card.id !== id)
+      } catch (error) {
+        console.error('Erreur lors de la suppression de la carte:', error)
+      }
+    },
+    cancelCardAction() {
+      this.currentCard = { id: null, front: '', back: '', theme_id: null }
+      this.newCards = [{ front: '', back: '' }] // Reset new cards
+      this.showCardForm = false
+      this.showEditCardForm = false
+    },
+    addCardFields() {
+      this.newCards.push({ front: '', back: '' })
     }
   }
 }
