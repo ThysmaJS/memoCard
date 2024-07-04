@@ -7,9 +7,16 @@ use Illuminate\Http\Request;
 
 class CategoryController extends Controller
 {
-    public function index()
+    public function allCategories()
     {
-        return auth()->user()->categories;
+        return response()->json(Category::all());
+    }
+
+    // Méthode pour récupérer les catégories de l'utilisateur connecté
+    public function userCategories()
+    {
+        $user = auth()->user();
+        return response()->json($user->categories);
     }
 
     public function store(Request $request)

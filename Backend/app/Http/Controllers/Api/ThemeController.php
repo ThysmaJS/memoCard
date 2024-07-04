@@ -12,6 +12,12 @@ class ThemeController extends Controller
         return Theme::where('category_id', $categoryId)->where('user_id', auth()->id())->get();
     }
 
+    public function allThemesByCategory($categoryId)
+    {
+        // Récupérer tous les thèmes d'une catégorie sans filtrer par utilisateur
+        return Theme::where('category_id', $categoryId)->with('user')->get();
+    }
+
     public function store(Request $request)
     {
         $request->validate([

@@ -345,7 +345,7 @@ export default {
     },
     async fetchCategories() {
       try {
-        const response = await axios.get('/categories')
+        const response = await axios.get('/user/categories')
         this.categories = response.data
       } catch (error) {
         console.error('Erreur lors de la récupération des catégories:', error)
