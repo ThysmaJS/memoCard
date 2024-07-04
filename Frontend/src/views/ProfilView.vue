@@ -479,7 +479,11 @@ export default {
 
       try {
         const response = await axios.post('/cards/batch', { cards: cardsToSave })
-        this.cards.push(...response.data)
+        if (Array.isArray(response.data)) {
+          this.cards.push(...response.data)
+        } else {
+          console.error('Unexpected response format:', response.data)
+        }
         this.newCards = [{ front: '', back: '' }] // Reset new cards
         this.showCardForm = false
       } catch (error) {

@@ -21,12 +21,14 @@ class CardController extends Controller
             'cards.*.back' => 'required|string',
             'cards.*.theme_id' => 'required|exists:themes,id'
         ]);
-
-        $cards = Card::insert($request->cards);
-
+    
+        $cards = [];
+        foreach ($request->cards as $cardData) {
+            $cards[] = Card::create($cardData);
+        }
+    
         return response()->json($cards, 201);
     }
-
     public function show(Card $card)
     {
         $this->authorize('view', $card);
