@@ -37,17 +37,31 @@ const logout = () => {
     </button>
     <nav class="hidden lg:flex space-x-4 text-white">
       <RouterLink to="/" class="hover:text-gray-200 transition duration-300">Accueil</RouterLink>
-      <RouterLink v-if="!authStore.isAuthenticated" to="/Register" class="hover:text-gray-200 transition duration-300"
+      <RouterLink
+        v-if="!authStore.isAuthenticated"
+        to="/Register"
+        class="hover:text-gray-200 transition duration-300"
         >Inscription</RouterLink
       >
-      <RouterLink v-if="authStore.isAuthenticated" to="/profil" class="hover:text-gray-200 transition duration-300"
+      <RouterLink
+        v-if="authStore.isAuthenticated"
+        to="/profil"
+        class="hover:text-gray-200 transition duration-300"
         >Profil</RouterLink
       >
-      <RouterLink v-if="!authStore.isAuthenticated" to="/Login" class="hover:text-gray-200 transition duration-300"
+      <RouterLink
+        v-if="!authStore.isAuthenticated"
+        to="/Login"
+        class="hover:text-gray-200 transition duration-300"
         >Connexion</RouterLink
       >
-      <button v-if="authStore.isAuthenticated" @click="logout" class="hover:text-gray-200 transition duration-300"
-        >Déconnexion</button>
+      <button
+        v-if="authStore.isAuthenticated"
+        @click="logout"
+        class="hover:text-gray-200 transition duration-300"
+      >
+        Déconnexion
+      </button>
     </nav>
     <transition name="slide-fade">
       <div
@@ -101,7 +115,12 @@ const logout = () => {
           >
           <button
             v-if="authStore.isAuthenticated"
-            @click="() => { toggleMenu(); logout(); }"
+            @click="
+              () => {
+                toggleMenu()
+                logout()
+              }
+            "
             class="block py-2 hover:text-gray-200 transition duration-300"
           >
             Déconnexion
@@ -111,7 +130,6 @@ const logout = () => {
     </transition>
   </header>
 </template>
-
 
 <style scoped>
 .slide-fade-enter-active,

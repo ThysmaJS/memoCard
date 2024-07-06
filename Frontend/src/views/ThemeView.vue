@@ -2,27 +2,17 @@
   <div class="theme-page">
     <h1 class="text-3xl font-bold mb-6">Thèmes pour la catégorie: {{ categoryName }}</h1>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-      <div
+      <router-link
         v-for="(theme, index) in themes"
         :key="theme.id"
+        :to="{ name: 'CardsView', params: { themeId: theme.id } }"
         :style="{ backgroundColor: colors[index % colors.length] }"
-        class="rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
+        class="block rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
       >
         <h2 class="text-4xl font-bold mb-4">{{ theme.name }}</h2>
         <p class="text-lg mb-2">Créé par: {{ theme.user.name }}</p>
         <p class="text-lg mb-6">{{ theme.description }}</p>
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div
-            v-for="(item, index) in theme.items"
-            :key="item.id"
-            :style="{ backgroundColor: colors[index % colors.length] }"
-            class="rounded-lg shadow-md p-6 hover:shadow-lg transition-shadow duration-300"
-          >
-            <h3 class="text-2xl font-bold mb-4">{{ item.name }}</h3>
-            <p>{{ item.description }}</p>
-          </div>
-        </div>
-      </div>
+      </router-link>
     </div>
   </div>
 </template>

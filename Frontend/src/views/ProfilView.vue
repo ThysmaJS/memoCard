@@ -433,6 +433,7 @@ export default {
         this.themes.push(response.data)
         this.currentTheme = { id: null, name: '', description: '', category_id: null }
         this.showThemeForm = false
+        this.fetchAllThemes() // Rafraîchit la liste des thèmes
       } catch (error) {
         console.error('Erreur lors de la création du thème:', error)
       }
