@@ -6,6 +6,8 @@ import ProfilView from '../views/ProfilView.vue'
 import AppRegister from '../components/AppRegister.vue'
 import AppLogin from '../components/AppLogin.vue'
 import CardsView from '../views/CardsView.vue'
+import SettingsView from '../views/SettingsView.vue'
+import DailyReview from '../views/DailyReviewView.vue' // Assurez-vous que le composant existe
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -44,6 +46,16 @@ const router = createRouter({
       path: '/themes/:themeId/cards',
       name: 'CardsView',
       component: CardsView
+    },
+    {
+      path: '/settings',
+      name: 'Settings',
+      component: SettingsView
+    },
+    {
+      path: '/themes/:themeId/review',
+      name: 'DailyReview',
+      component: DailyReview
     }
   ]
 })

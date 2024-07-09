@@ -63,4 +63,18 @@ class ThemeController extends Controller
         $themes = Theme::where('user_id', auth()->id())->get();
         return response()->json($themes);
     }
+    public function saveSettings(Request $request, $themeId)
+{
+    $validated = $request->validate([
+        'levels' => 'required|integer|min:1',
+        'newCardsPerDay' => 'required|integer|min:1'
+    ]);
+
+    $theme = Theme::find($themeId);
+    $theme->levels = $validated['levels'];
+    $theme->new_cards_per_day = $validated['newCardsPerDay'];
+    $theme->save();
+
+    return response()->json($theme);
+}
 }

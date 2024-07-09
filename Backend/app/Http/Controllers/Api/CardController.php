@@ -2,9 +2,10 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Http\Controllers\Controller;
 use App\Models\Card;
+use App\Models\Theme;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class CardController extends Controller
 {
@@ -48,4 +49,24 @@ class CardController extends Controller
         $card->delete();
         return response()->json(null, 204);
     }
+    public function dailyReview($themeId)
+{
+    $theme = Theme::find($themeId);
+    $newCards = Card::where('theme_id', $themeId)
+                    ->whereNull('last_reviewed_at')
+                    ->take($theme->new_cards_per_day)
+                    ->get();
+
+    $reviewCards = Card::where('theme_id', $themeId)
+                       ->whereNotNull('last_reviewed_at')
+                       ->orderBy('next_review_at')
+                       ->take($theme->new_cards_per_day)
+                       ->get();
+
+    return response()->json([
+        'newCards' => $newCards,
+        'reviewCards' => $reviewCards
+    ]);
+}
+
 }

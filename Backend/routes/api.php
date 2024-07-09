@@ -21,6 +21,8 @@ Route::post('/auth/register', [UserController::class, 'createUser']);
 Route::post('/auth/login', [UserController::class, 'loginUser'])->name('login');
 Route::get('/categories/{category}/all-themes', [ThemeController::class, 'allThemesByCategory']);
 Route::get('/categories/all', [CategoryController::class, 'allCategories']); // Route publique pour toutes les catégories
+Route::post('/themes/{theme}/settings', [ThemeController::class, 'saveSettings']);
+Route::get('/themes/{theme}/daily-review', [CardController::class, 'dailyReview']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {

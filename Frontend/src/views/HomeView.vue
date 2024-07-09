@@ -14,16 +14,11 @@
         N'attends plus et lance-toi !
       </p>
       <div class="flex flex-col items-center sm:flex-row sm:justify-center">
-        <a
-          href="#features"
-          class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-full mb-4 sm:mb-0 sm:mr-4 transition duration-300 ease-in-out transform hover:scale-105"
-          >Me connecter</a
-        >
         <router-link
           to="/category"
           class="bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-full transition duration-300 ease-in-out transform hover:scale-105"
         >
-          Catégories
+          Réviser !
         </router-link>
       </div>
     </section>
