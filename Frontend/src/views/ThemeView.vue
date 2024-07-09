@@ -1,7 +1,8 @@
 <template>
   <div class="theme-page">
     <h1 class="text-3xl font-bold mb-6">Thèmes pour la catégorie: {{ categoryName }}</h1>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <Loader v-if="loading" />
+    <div v-else class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       <router-link
         v-for="(theme, index) in themes"
         :key="theme.id"
@@ -19,13 +20,18 @@
 
 <script>
 import axios from 'axios'
+import Loader from '../components/AppLoader.vue'
 
 export default {
+  components: {
+    Loader
+  },
   data() {
     return {
       categoryName: '',
       themes: [],
-      colors: ['#FFCDD2', '#E1BEE7', '#BBDEFB', '#C8E6C9', '#FFECB3', '#D1C4E9']
+      colors: ['#FFCDD2', '#E1BEE7', '#BBDEFB', '#C8E6C9', '#FFECB3', '#D1C4E9'],
+      loading: true
     }
   },
   created() {
@@ -45,6 +51,8 @@ export default {
         }
       } catch (error) {
         console.error('Erreur lors de la récupération des thèmes:', error)
+      } finally {
+        this.loading = false
       }
     }
   }

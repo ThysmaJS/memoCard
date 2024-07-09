@@ -16,7 +16,7 @@
       <!-- Onglets -->
       <div class="flex space-x-4 mb-6 justify-center">
         <button
-          @click="activeTab = 'categories'"
+          @click="setActiveTab('categories')"
           :class="{
             'bg-blue-500 text-white': activeTab === 'categories',
             'bg-gray-200 text-black': activeTab !== 'categories'
@@ -26,7 +26,7 @@
           Catégories
         </button>
         <button
-          @click="activeTab = 'themes'"
+          @click="setActiveTab('themes')"
           :class="{
             'bg-blue-500 text-white': activeTab === 'themes',
             'bg-gray-200 text-black': activeTab !== 'themes'
@@ -36,7 +36,7 @@
           Thèmes
         </button>
         <button
-          @click="activeTab = 'cards'"
+          @click="setActiveTab('cards')"
           :class="{
             'bg-blue-500 text-white': activeTab === 'cards',
             'bg-gray-200 text-black': activeTab !== 'cards'
@@ -291,16 +291,15 @@
 
 <script>
 import axios from '../axios'
+import { useCategoryStore } from '../stores/category'
+import { useThemeStore } from '../stores/theme'
+import { useCardStore } from '../stores/card'
 
 export default {
   data() {
     return {
       user: {},
       activeTab: 'categories', // Default active tab
-      categories: [], // Initialize empty categories
-      themes: [], // Initialize empty themes
-      allThemes: [], // Initialize empty allThemes
-      cards: [], // Initialize empty cards
       selectedCategoryId: null, // Track selected category for themes
       selectedThemeId: null, // Track selected theme for cards
       showCategoryForm: false,
@@ -329,12 +328,46 @@ export default {
       newCards: [{ front: '', back: '' }] // Default 1 new card
     }
   },
+  computed: {
+    categories() {
+      return useCategoryStore().categories
+    },
+    themes() {
+      return useThemeStore().themes
+    },
+    allThemes() {
+      return useThemeStore().allThemes
+    },
+    cards() {
+      return useCardStore().cards
+    }
+  },
   created() {
     this.fetchUserProfile()
-    this.fetchCategories() // Fetch categories when component is created
-    this.fetchAllThemes() // Fetch all themes for cards tab
+    useCategoryStore().fetchCategories()
+    useThemeStore().fetchAllThemes()
+
+    // Set interval to refresh themes every minute (60000 ms)
+    this.refreshInterval = setInterval(() => {
+      if (this.activeTab === 'cards') {
+        this.fetchAllThemes()
+      }
+    }, 60000)
+  },
+  beforeUnmount() {
+    // Clear the interval when the component is destroyed
+    clearInterval(this.refreshInterval)
   },
   methods: {
+    setActiveTab(tab) {
+      this.activeTab = tab
+      if (tab === 'themes') {
+        this.fetchThemes()
+      } else if (tab === 'cards') {
+        this.fetchAllThemes() // Change this to fetchAllThemes to get all themes
+        this.fetchCards()
+      }
+    },
     async fetchUserProfile() {
       try {
         const response = await axios.get('/user')
@@ -343,50 +376,23 @@ export default {
         console.error('Erreur lors de la récupération du profil utilisateur:', error)
       }
     },
-    async fetchCategories() {
-      try {
-        const response = await axios.get('/user/categories')
-        this.categories = response.data
-      } catch (error) {
-        console.error('Erreur lors de la récupération des catégories:', error)
-      }
-    },
     async fetchThemes() {
       if (this.selectedCategoryId) {
-        try {
-          const response = await axios.get(`/categories/${this.selectedCategoryId}/themes`)
-          this.themes = response.data
-        } catch (error) {
-          console.error('Erreur lors de la récupération des thèmes:', error)
-        }
-      } else {
-        this.themes = []
+        await useThemeStore().fetchThemes(this.selectedCategoryId)
       }
     },
     async fetchAllThemes() {
-      try {
-        const response = await axios.get('/themes')
-        this.allThemes = response.data
-      } catch (error) {
-        console.error('Erreur lors de la récupération de tous les thèmes:', error)
-      }
+      await useThemeStore().fetchAllThemes()
     },
     async fetchCards() {
       if (this.selectedThemeId) {
-        try {
-          const response = await axios.get(`/themes/${this.selectedThemeId}/cards`)
-          this.cards = response.data
-        } catch (error) {
-          console.error('Erreur lors de la récupération des cartes:', error)
-        }
-      } else {
-        this.cards = []
+        await useCardStore().fetchCards(this.selectedThemeId)
       }
     },
     async saveCategory() {
       try {
         const response = await axios.post('/categories', this.currentCategory)
-        this.categories.push(response.data)
+        useCategoryStore().addCategory(response.data)
         this.currentCategory = { id: null, name: '', description: '' }
         this.showCategoryForm = false
       } catch (error) {
@@ -404,10 +410,7 @@ export default {
           `/categories/${this.currentCategory.id}`,
           this.currentCategory
         )
-        const index = this.categories.findIndex(
-          (category) => category.id === this.currentCategory.id
-        )
-        this.categories.splice(index, 1, response.data)
+        useCategoryStore().updateCategory(response.data)
         this.currentCategory = { id: null, name: '', description: '' }
         this.showEditCategoryForm = false
       } catch (error) {
@@ -417,7 +420,7 @@ export default {
     async deleteCategory(id) {
       try {
         await axios.delete(`/categories/${id}`)
-        this.categories = this.categories.filter((category) => category.id !== id)
+        useCategoryStore().removeCategory(id)
       } catch (error) {
         console.error('Erreur lors de la suppression de la catégorie:', error)
       }
@@ -430,10 +433,10 @@ export default {
     async saveTheme() {
       try {
         const response = await axios.post('/themes', this.currentTheme)
-        this.themes.push(response.data)
+        useThemeStore().addTheme(response.data)
         this.currentTheme = { id: null, name: '', description: '', category_id: null }
         this.showThemeForm = false
-        this.fetchAllThemes() // Rafraîchit la liste des thèmes
+        this.fetchAllThemes() // Refresh themes after creating a new theme
       } catch (error) {
         console.error('Erreur lors de la création du thème:', error)
       }
@@ -446,10 +449,10 @@ export default {
     async updateTheme() {
       try {
         const response = await axios.put(`/themes/${this.currentTheme.id}`, this.currentTheme)
-        const index = this.themes.findIndex((theme) => theme.id === this.currentTheme.id)
-        this.themes.splice(index, 1, response.data)
+        useThemeStore().updateTheme(response.data)
         this.currentTheme = { id: null, name: '', description: '', category_id: null }
         this.showEditThemeForm = false
+        this.fetchAllThemes() // Refresh themes after updating a theme
       } catch (error) {
         console.error('Erreur lors de la mise à jour du thème:', error)
       }
@@ -457,7 +460,8 @@ export default {
     async deleteTheme(id) {
       try {
         await axios.delete(`/themes/${id}`)
-        this.themes = this.themes.filter((theme) => theme.id !== id)
+        useThemeStore().removeTheme(id)
+        this.fetchAllThemes() // Refresh themes after deleting a theme
       } catch (error) {
         console.error('Erreur lors de la suppression du thème:', error)
       }
@@ -481,7 +485,7 @@ export default {
       try {
         const response = await axios.post('/cards/batch', { cards: cardsToSave })
         if (Array.isArray(response.data)) {
-          this.cards.push(...response.data)
+          useCardStore().addCards(response.data)
         } else {
           console.error('Unexpected response format:', response.data)
         }
@@ -502,8 +506,7 @@ export default {
           front: this.currentCard.front,
           back: this.currentCard.back
         })
-        const index = this.cards.findIndex((card) => card.id === this.currentCard.id)
-        this.cards.splice(index, 1, response.data)
+        useCardStore().updateCard(response.data)
         this.currentCard = { id: null, front: '', back: '', theme_id: null }
         this.showEditCardForm = false
       } catch (error) {
@@ -513,7 +516,7 @@ export default {
     async deleteCard(id) {
       try {
         await axios.delete(`/cards/${id}`)
-        this.cards = this.cards.filter((card) => card.id !== id)
+        useCardStore().removeCard(id)
       } catch (error) {
         console.error('Erreur lors de la suppression de la carte:', error)
       }
