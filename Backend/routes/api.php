@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\CardController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\ThemeController;
+use App\Http\Controllers\Api\ApiReviewController;
 use App\Http\Controllers\Api\CategoryController;
 
 /*
@@ -24,6 +25,9 @@ Route::get('/categories/all', [CategoryController::class, 'allCategories']); // 
 Route::post('/themes/{theme}/settings', [ThemeController::class, 'saveSettings']);
 Route::get('/themes/{theme}/daily-review', [CardController::class, 'dailyReview']);
 
+
+
+
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/user', function (Request $request) {
         return $request->user();
@@ -36,4 +40,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/themes/{theme}/cards', [CardController::class, 'index']);
     Route::post('/cards/batch', [CardController::class, 'storeBatch']);
     Route::resource('cards', CardController::class)->except(['store']);
+    Route::get('/user/reviews', [ApiReviewController::class, 'userReviews']);
+    Route::post('/reviews', [ApiReviewController::class, 'store']);
+
 });
+

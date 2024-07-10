@@ -7,7 +7,8 @@ import AppRegister from '../components/AppRegister.vue'
 import AppLogin from '../components/AppLogin.vue'
 import CardsView from '../views/CardsView.vue'
 import SettingsView from '../views/SettingsView.vue'
-import DailyReview from '../views/DailyReviewView.vue' // Assurez-vous que le composant existe
+import DailyReview from '../views/DailyReviewView.vue'
+import MyReviews from '../views/MyReviewsView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -56,6 +57,11 @@ const router = createRouter({
       path: '/themes/:themeId/review',
       name: 'DailyReview',
       component: DailyReview
+    },
+    {
+      path: '/mes-revisions',
+      name: 'MesRevisions',
+      component: MyReviews
     }
   ]
 })

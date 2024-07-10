@@ -120,8 +120,23 @@ export default {
         }, 600)
       }
     },
-    finishReview() {
+    async finishReview() {
       this.isReviewFinished = true
+      try {
+        const userResponse = await axios.get('/user', { withCredentials: true })
+        const userId = userResponse.data ? userResponse.data.id : null
+        const reviewData = {
+          review_date: new Date().toISOString().split('T')[0], // format YYYY-MM-DD
+          max_level: 5, // exemple de niveau maximal
+          user_id: userId,
+          theme_id: this.selectedThemeId,
+          level: 1 // exemple de niveau
+        }
+        await axios.post('/reviews', reviewData, { withCredentials: true })
+        console.log('Révision enregistrée avec succès')
+      } catch (error) {
+        console.error("Erreur lors de l'enregistrement de la révision:", error)
+      }
     }
   }
 }

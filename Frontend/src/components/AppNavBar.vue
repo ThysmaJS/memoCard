@@ -56,6 +56,12 @@ const logout = () => {
         >Paramètres</RouterLink
       >
       <RouterLink
+        v-if="authStore.isAuthenticated"
+        to="/mes-revisions"
+        class="hover:text-gray-200 transition duration-300"
+        >Mes Révisions</RouterLink
+      >
+      <RouterLink
         v-if="!authStore.isAuthenticated"
         to="/Login"
         class="hover:text-gray-200 transition duration-300"
@@ -118,6 +124,13 @@ const logout = () => {
             class="block py-2 hover:text-gray-200 transition duration-300"
             @click="toggleMenu"
             >Paramètres</RouterLink
+          >
+          <RouterLink
+            v-if="authStore.isAuthenticated"
+            to="/mes-revisions"
+            class="block py-2 hover:text-gray-200 transition duration-300"
+            @click="toggleMenu"
+            >Mes Révisions</RouterLink
           >
           <RouterLink
             v-if="!authStore.isAuthenticated"
