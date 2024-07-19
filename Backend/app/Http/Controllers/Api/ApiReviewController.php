@@ -68,4 +68,20 @@ class ApiReviewController extends Controller
             return response()->json(['message' => 'Internal Server Error'], 500);
         }
     }
+
+    public function checkReview(Request $request)
+    {
+        $themeId = $request->input('theme_id');
+        $userId = $request->input('user_id');
+        
+        $review = Review::where('theme_id', $themeId)
+                        ->where('user_id', $userId)
+                        ->first();
+
+        if ($review) {
+            return response()->json(['review' => $review]);
+        } else {
+            return response()->json(['review' => null]);
+        }
+    }
 }

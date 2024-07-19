@@ -12,12 +12,19 @@
         <h2 class="text-4xl font-bold mb-4">{{ review.theme.name }}</h2>
         <p class="text-lg mb-2">Niveau: {{ review.level }}</p>
         <p class="text-lg mb-6">{{ review.theme.description }}</p>
-        <router-link
-          :to="{ name: 'DailyReview', params: { themeId: review.theme.id } }"
-          class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Revoir ce thème
-        </router-link>
+        <div v-if="isReviewDue(review.review_date)">
+          <router-link
+            :to="{ name: 'DailyReview', params: { themeId: review.theme.id } }"
+            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Revoir ce thème
+          </router-link>
+        </div>
+        <div v-else>
+          <button class="bg-red-500 text-white px-4 py-2 rounded" disabled>
+            Reviens le {{ formatDate(review.review_date) }} pour réviser
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -54,6 +61,22 @@ export default {
       } finally {
         this.loading = false
       }
+    },
+    isReviewDue(reviewDate) {
+      const today = new Date()
+      const review = new Date(reviewDate)
+      return (
+        today.getFullYear() === review.getFullYear() &&
+        today.getMonth() === review.getMonth() &&
+        today.getDate() === review.getDate()
+      )
+    },
+    formatDate(date) {
+      const d = new Date(date)
+      const day = ('0' + d.getDate()).slice(-2)
+      const month = ('0' + (d.getMonth() + 1)).slice(-2)
+      const year = d.getFullYear()
+      return `${day}/${month}/${year}`
     }
   }
 }

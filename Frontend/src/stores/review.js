@@ -29,6 +29,22 @@ export const useReviewStore = defineStore('review', {
     },
     removeReview(id) {
       this.reviews = this.reviews.filter((r) => r.id !== id)
+    },
+    async finishReview(themeId) {
+      try {
+        const response = await axios.post(
+          '/reviews/finish',
+          { theme_id: themeId },
+          {
+            withCredentials: true
+          }
+        )
+        const updatedReview = response.data.review
+        this.updateReview(updatedReview)
+        console.log('Révision finalisée avec succès')
+      } catch (error) {
+        console.error('Erreur lors de la finalisation de la révision:', error)
+      }
     }
   }
 })

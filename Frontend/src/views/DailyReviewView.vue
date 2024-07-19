@@ -82,7 +82,8 @@ export default {
       flipped: false,
       moveToBack: false,
       selectedThemeId: null,
-      isReviewFinished: false
+      isReviewFinished: false,
+      review: null
     }
   },
   computed: {
@@ -96,6 +97,7 @@ export default {
   created() {
     this.selectedThemeId = this.$route.params.themeId
     this.fetchCards()
+    this.checkReview()
   },
   methods: {
     async fetchCards() {
@@ -104,6 +106,22 @@ export default {
         this.cards = response.data
       } catch (error) {
         console.error('Erreur lors de la récupération des cartes:', error)
+      }
+    },
+    async checkReview() {
+      try {
+        const userResponse = await axios.get('/user', { withCredentials: true })
+        const userId = userResponse.data ? userResponse.data.id : null
+        const response = await axios.get(`/reviews/check`, {
+          params: {
+            theme_id: this.selectedThemeId,
+            user_id: userId
+          },
+          withCredentials: true
+        })
+        this.review = response.data.review
+      } catch (error) {
+        console.error('Erreur lors de la vérification de la révision:', error)
       }
     },
     flipCard() {
@@ -125,15 +143,26 @@ export default {
       try {
         const userResponse = await axios.get('/user', { withCredentials: true })
         const userId = userResponse.data ? userResponse.data.id : null
-        const reviewData = {
-          review_date: new Date().toISOString().split('T')[0], // format YYYY-MM-DD
-          max_level: 5, // exemple de niveau maximal
-          user_id: userId,
-          theme_id: this.selectedThemeId,
-          level: 1 // exemple de niveau
+        if (this.review && this.review.level !== null) {
+          // Update existing review
+          const reviewData = {
+            theme_id: this.selectedThemeId,
+            user_id: userId
+          }
+          await axios.post('/reviews/finish', reviewData, { withCredentials: true })
+          console.log('Révision mise à jour avec succès')
+        } else {
+          // Create new review
+          const reviewData = {
+            review_date: new Date().toISOString().split('T')[0], // format YYYY-MM-DD
+            max_level: 5, // exemple de niveau maximal
+            user_id: userId,
+            theme_id: this.selectedThemeId,
+            level: 1 // exemple de niveau
+          }
+          await axios.post('/reviews', reviewData, { withCredentials: true })
+          console.log('Nouvelle révision enregistrée avec succès')
         }
-        await axios.post('/reviews', reviewData, { withCredentials: true })
-        console.log('Révision enregistrée avec succès')
       } catch (error) {
         console.error("Erreur lors de l'enregistrement de la révision:", error)
       }
@@ -220,7 +249,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-
 .hand {
   position: relative;
   height: 100px;

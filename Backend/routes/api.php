@@ -42,6 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('cards', CardController::class)->except(['store']);
     Route::get('/user/reviews', [ApiReviewController::class, 'userReviews']);
     Route::post('/reviews', [ApiReviewController::class, 'store']);
-
+    Route::post('/reviews/finish', [ApiReviewController::class, 'finishReview']);
+    Route::get('/reviews/check', [ApiReviewController::class, 'checkReview']);
 });
 

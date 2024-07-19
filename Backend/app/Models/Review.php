@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -61,6 +60,7 @@ class Review extends Model
     {
         // Logique pour mettre à jour le niveau
         $this->level = min($this->level + 1, $this->max_level);
+        $this->calculateNextReviewDate($this->level);
         $this->save();
     }
 }
