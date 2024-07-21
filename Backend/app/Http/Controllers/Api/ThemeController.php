@@ -15,7 +15,10 @@ class ThemeController extends Controller
     public function allThemesByCategory($categoryId)
     {
         // Récupérer tous les thèmes d'une catégorie sans filtrer par utilisateur
-        return Theme::where('category_id', $categoryId)->with('user')->get();
+        return Theme::where('category_id', $categoryId)
+                     ->where('public', true)
+                     ->with('user')
+                     ->get();
     }
 
     public function store(Request $request)
@@ -23,7 +26,8 @@ class ThemeController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|exists:categories,id',
+            'public' => 'boolean'
         ]);
 
         $theme = new Theme($request->all());
@@ -45,7 +49,8 @@ class ThemeController extends Controller
         $request->validate([
             'name' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'category_id' => 'required|exists:categories,id'
+            'category_id' => 'required|exists:categories,id',
+            'public' => 'boolean'
         ]);
         $theme->update($request->all());
         return response()->json($theme);

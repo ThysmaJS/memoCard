@@ -167,6 +167,12 @@
             </option>
           </select>
           <div class="flex space-x-2">
+            <label>
+              <input type="checkbox" v-model="currentTheme.public" />
+              Rendre ce thème public
+            </label>
+          </div>
+          <div class="flex space-x-2 mt-4">
             <button
               @click="saveTheme"
               v-if="!showEditThemeForm"
@@ -317,7 +323,8 @@ export default {
         id: null,
         name: '',
         description: '',
-        category_id: null
+        category_id: null,
+        public: false // Ajoutez la propriété 'public' ici
       },
       currentCard: {
         id: null,
@@ -434,7 +441,13 @@ export default {
       try {
         const response = await axios.post('/themes', this.currentTheme)
         useThemeStore().addTheme(response.data)
-        this.currentTheme = { id: null, name: '', description: '', category_id: null }
+        this.currentTheme = {
+          id: null,
+          name: '',
+          description: '',
+          category_id: null,
+          public: false
+        }
         this.showThemeForm = false
         this.fetchAllThemes() // Refresh themes after creating a new theme
       } catch (error) {
@@ -450,7 +463,13 @@ export default {
       try {
         const response = await axios.put(`/themes/${this.currentTheme.id}`, this.currentTheme)
         useThemeStore().updateTheme(response.data)
-        this.currentTheme = { id: null, name: '', description: '', category_id: null }
+        this.currentTheme = {
+          id: null,
+          name: '',
+          description: '',
+          category_id: null,
+          public: false
+        }
         this.showEditThemeForm = false
         this.fetchAllThemes() // Refresh themes after updating a theme
       } catch (error) {
@@ -467,7 +486,7 @@ export default {
       }
     },
     cancelThemeAction() {
-      this.currentTheme = { id: null, name: '', description: '', category_id: null }
+      this.currentTheme = { id: null, name: '', description: '', category_id: null, public: false }
       this.showThemeForm = false
       this.showEditThemeForm = false
     },

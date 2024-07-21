@@ -55,7 +55,7 @@ export default {
     async fetchThemes(categoryId) {
       try {
         const response = await axios.get(`/api/categories/${categoryId}/all-themes`)
-        this.themes = response.data
+        this.themes = response.data.filter((theme) => theme.public) // Filtrer pour ne garder que les thèmes publics
         if (this.themes.length > 0) {
           this.categoryName = this.themes[0].category.name
         } else {
