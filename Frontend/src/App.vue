@@ -5,6 +5,7 @@ import AppNavBar from './components/AppNavBar.vue'
 </script>
 
 <template>
+  <link rel="manifest" href="/manifest.json" />
   <div class="min-h-screen bg-gradient-to-br from-blue-400 to-green-400 text-white">
     <AppNavBar />
     <div class="">
