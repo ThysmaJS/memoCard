@@ -1,14 +1,14 @@
 
-# MemoCard
+# 📚 MemoCard
 
 Ce projet est une application web utilisant **VueJS** pour le front-end et **Laravel** pour le back-end dans le cadre d'un projet scolaire. Les données sont générées à l'aide de factories et seeders, et l'ensemble du projet est dockerisé pour une configuration facile.
 
-## Prérequis
+## 🔧 Prérequis
 
-- Docker
-- Docker Compose
+- 🐳 Docker
+- 🐳 Docker Compose
 
-## Installation et Configuration
+## 🚀 Installation et Configuration
 
 ### 1. Cloner le dépôt
 
@@ -52,27 +52,27 @@ docker-compose exec frontend npm install
 docker-compose exec app php artisan migrate --seed
 ```
 
-### 6. Création de l'utilisateur spécifique
+### 6. 🌟 Création de l'utilisateur spécifique
 
-Un utilisateur spécifique avec les informations suivantes est créé automatiquement :
+Pour le bon déroulement de l'application, utilisez ces identifiants pour vous connecter à l'application :
 
 - **Email**: gary@gary.com
 - **Mot de passe**: gary
 
-## Utilisation
+## 🌐 Utilisation
 
 - **Frontend** : [http://localhost:8081](http://localhost:8081)
 - **Backend API** : [http://localhost:8000](http://localhost:8000)
 
-## Commandes Utiles
+## 🔍 Commandes Utiles
 
-### Démarrer les conteneurs
+### ▶️ Démarrer les conteneurs
 
 ```sh
 docker-compose up -d
 ```
 
-### Arrêter les conteneurs
+### ⏹️ Arrêter les conteneurs
 
 ```sh
 docker-compose down
