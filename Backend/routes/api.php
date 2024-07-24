@@ -44,5 +44,6 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/reviews', [ApiReviewController::class, 'store']);
     Route::post('/reviews/finish', [ApiReviewController::class, 'finishReview']);
     Route::get('/reviews/check', [ApiReviewController::class, 'checkReview']);
+    Route::post('/reviews/reset', [ApiReviewController::class, 'resetReviewLevel']);
 });
 

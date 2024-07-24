@@ -21,20 +21,28 @@
               <h2 class="text-2xl font-bold mb-4">{{ currentCard.back }}</h2>
             </div>
           </div>
-          <button
-            v-if="!isLastCard"
-            @click="nextCard"
-            class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded mt-4"
-          >
-            Suivant
-          </button>
-          <button
-            v-if="isLastCard"
-            @click="finishReview"
-            class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded mt-4"
-          >
-            J'ai fini de réviser
-          </button>
+          <div class="flex justify-between mt-4">
+            <button
+              @click="resetToLevelOne"
+              class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+            >
+              Erreur
+            </button>
+            <button
+              v-if="!isLastCard"
+              @click="nextCard"
+              class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            >
+              Suivant
+            </button>
+            <button
+              v-if="isLastCard"
+              @click="finishReview"
+              class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
+            >
+              J'ai fini de réviser
+            </button>
+          </div>
         </div>
         <div v-else class="finish-section">
           <h2 class="text-3xl font-bold mb-4">Cette révision est terminée !</h2>
@@ -165,6 +173,24 @@ export default {
         }
       } catch (error) {
         console.error("Erreur lors de l'enregistrement de la révision:", error)
+      }
+    },
+    async resetToLevelOne() {
+      try {
+        const userResponse = await axios.get('/user', { withCredentials: true })
+        const userId = userResponse.data ? userResponse.data.id : null
+        if (this.review) {
+          const reviewData = {
+            theme_id: this.selectedThemeId,
+            user_id: userId,
+            level: 1 // Reset level to 1
+          }
+          await axios.post('/reviews/reset', reviewData, { withCredentials: true })
+          this.$router.push({ name: 'MesRevisions' })
+          console.log('Niveau de révision réinitialisé à 1 avec succès')
+        }
+      } catch (error) {
+        console.error('Erreur lors de la réinitialisation du niveau de révision:', error)
       }
     }
   }

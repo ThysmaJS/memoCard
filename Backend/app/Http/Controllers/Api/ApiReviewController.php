@@ -69,6 +69,36 @@ class ApiReviewController extends Controller
         }
     }
 
+    public function resetReviewLevel(Request $request)
+    {
+        $themeId = $request->input('theme_id');
+        $userId = $request->input('user_id');
+    
+        $review = Review::where('theme_id', $themeId)
+                        ->where('user_id', $userId)
+                        ->orderBy('review_date', 'desc')
+                        ->first();
+    
+        if ($review) {
+            $this->authorize('update', $review);
+        } else {
+            abort(404, 'Review not found');
+        }
+    
+        try {
+            $review->level = 1;
+            $review->calculateNextReviewDate($review->level);
+            $review->save();
+    
+            Log::info('Review level reset to 1 successfully');
+            
+            return response()->json(['message' => 'Review level reset to 1 successfully.']);
+        } catch (\Exception $e) {
+            Log::error('Error in resetReviewLevel: ' . $e->getMessage());
+            return response()->json(['message' => 'Internal Server Error'], 500);
+        }
+    }
+
     public function checkReview(Request $request)
     {
         $themeId = $request->input('theme_id');
