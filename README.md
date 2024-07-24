@@ -1,62 +1,79 @@
-+++
 
-MemoCard
-Ce projet est une application web utilisant VueJS pour le front-end et Laravel pour le back-end dans le cadre d'un projet scolaire. 
-Les données sont générées à l'aide de factories et seeders, et l'ensemble du projet est dockerisé pour une configuration facile.
+# MemoCard
 
-Prérequis
-Docker
-Docker Compose
-Installation et Configuration
-1. Cloner le dépôt
+Ce projet est une application web utilisant **VueJS** pour le front-end et **Laravel** pour le back-end dans le cadre d'un projet scolaire. Les données sont générées à l'aide de factories et seeders, et l'ensemble du projet est dockerisé pour une configuration facile.
 
+## Prérequis
+
+- Docker
+- Docker Compose
+
+## Installation et Configuration
+
+### 1. Cloner le dépôt
+
+```sh
 git clone https://github.com/ThysmaJS/memoCard.git
+cd memoCard
+```
 
-cd votre-repo
+### 2. Configuration des variables d'environnement
 
-3. Configuration des variables d'environnement
-4. 
-Copiez le fichier .env.example pour créer votre fichier .env :
+Copiez le fichier `.env.example` pour créer votre fichier `.env` :
 
+```sh
 cp .env.example .env
+```
 
-3. Construire et lancer les conteneurs Docker
+### 3. Construire et lancer les conteneurs Docker
 
+```sh
 docker-compose up --build -d
-4. Installer les dépendances
+```
 
-Backend Laravel
+### 4. Installer les dépendances
 
+#### Backend Laravel
+
+```sh
 docker-compose exec app composer install
 docker-compose exec app php artisan key:generate
+```
 
-Frontend VueJS
+#### Frontend VueJS
 
+```sh
 docker-compose exec frontend npm install
+```
 
-5. Générer les données avec les Seeders
+### 5. Générer les données avec les Seeders
 
+```sh
 docker-compose exec app php artisan migrate --seed
+```
 
-6. Création de l'utilisateur spécifique
+### 6. Création de l'utilisateur spécifique
+
 Un utilisateur spécifique avec les informations suivantes est créé automatiquement :
 
-Email: gary@gary.com
-Mot de passe: gary
+- **Email**: gary@gary.com
+- **Mot de passe**: gary
 
-Utilisation
-Accéder à l'application
-Frontend : http://localhost:8081
-Backend API : http://localhost:8000
+## Utilisation
 
-Commandes Utiles
+- **Frontend** : [http://localhost:8081](http://localhost:8081)
+- **Backend API** : [http://localhost:8000](http://localhost:8000)
 
-Démarrer les conteneurs :
+## Commandes Utiles
 
+### Démarrer les conteneurs
+
+```sh
 docker-compose up -d
+```
 
-Arrêter les conteneurs :
+### Arrêter les conteneurs
 
+```sh
 docker-compose down
-
-+++
+```
