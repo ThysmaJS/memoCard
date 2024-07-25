@@ -17,40 +17,38 @@ git clone https://github.com/ThysmaJS/memoCard.git
 cd memoCard
 ```
 
-### 2. Configuration des variables d'environnement
-
-Copiez le fichier `.env.example` pour créer votre fichier `.env` :
-
-```sh
-cp .env.example .env
-```
-
-### 3. Construire et lancer les conteneurs Docker
+### 2. Construire et lancer les conteneurs Docker
 
 ```sh
 docker-compose up --build -d
 ```
 
-### 4. Installer les dépendances
+### 3. Installer les dépendances
 
 #### Backend Laravel
 
 ```sh
-docker-compose exec app composer install
-docker-compose exec app php artisan key:generate
+cd Backend
+composer install
 ```
 
 #### Frontend VueJS
 
 ```sh
-docker-compose exec frontend npm install
+cd Frontend
+ npm install
 ```
 
 ### 5. Générer les données avec les Seeders
 
 ```sh
-docker-compose exec app php artisan migrate --seed
+cd Backend
+php artisan migrate --seed
 ```
+
+⚠️ ATTENTION ⚠️
+
+Si ne fonctionne pas, dupliquer le ".env.example" en renommant la duplication en ".env".
 
 ### 6. 🌟 Création de l'utilisateur spécifique
 
