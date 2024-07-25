@@ -48,7 +48,7 @@
           <h2 class="text-3xl font-bold mb-4">Cette révision est terminée !</h2>
           <p class="text-lg mb-6">
             Félicitations, vous avez terminé votre révision. Vous pouvez maintenant revenir à
-            l'accueil ou visiter votre profil.
+            l'accueil ou consulter vos révisions.
           </p>
           <div class="button-group flex flex-col space-y-4">
             <router-link
@@ -58,10 +58,10 @@
               Retour à l'accueil
             </router-link>
             <router-link
-              :to="{ name: 'Profil' }"
+              :to="{ name: 'MesRevisions' }"
               class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
             >
-              Aller au profil
+              Mes révisions
             </router-link>
           </div>
         </div>

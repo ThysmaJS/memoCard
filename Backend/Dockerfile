@@ -1,13 +1,14 @@
 # Utilisez l'image officielle PHP avec Apache, version 8.2
 FROM php:8.2-apache
 
-# Installez les extensions PHP nécessaires
+# Installez les extensions PHP nécessaires et git
 RUN apt-get update && apt-get install -y \
     libpng-dev \
     libjpeg-dev \
     libfreetype6-dev \
     zip \
     unzip \
+    git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
     && docker-php-ext-install gd \
     && docker-php-ext-install pdo pdo_mysql
@@ -22,8 +23,9 @@ COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 WORKDIR /var/www/html
 COPY . /var/www/html
 
-# Installez les dépendances PHP
-RUN composer install --no-interaction --prefer-dist --optimize-autoloader
+# Autoriser Composer à s'exécuter en tant que super utilisateur et augmenter le timeout
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer config --global process-timeout 2000
+RUN COMPOSER_ALLOW_SUPERUSER=1 composer install --no-interaction --prefer-dist --optimize-autoloader
 
 # Donnez les permissions nécessaires
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache

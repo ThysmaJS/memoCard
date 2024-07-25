@@ -11,7 +11,7 @@ use App\Http\Controllers\Api\CategoryController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
-|--------------------------------------------------------------------------
+|---------------------------------------------------------------------------
 |
 | Here is where you can register API routes for your application. These
 | routes are loaded by the RouteServiceProvider and all of them will
@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\CategoryController;
 Route::post('/auth/register', [UserController::class, 'createUser']);
 Route::post('/auth/login', [UserController::class, 'loginUser'])->name('login');
 Route::get('/categories/{category}/all-themes', [ThemeController::class, 'allThemesByCategory']);
-Route::get('/categories/all', [CategoryController::class, 'allCategories']); // Route publique pour toutes les catégories
+Route::get('/categories/all', [CategoryController::class, 'allCategories']);
 Route::post('/themes/{theme}/settings', [ThemeController::class, 'saveSettings']);
 Route::get('/themes/{theme}/daily-review', [CardController::class, 'dailyReview']);
 
@@ -33,8 +33,7 @@ Route::middleware('auth:sanctum')->group(function () {
         return $request->user();
     });
     Route::resource('categories', CategoryController::class);
-    Route::get('/user/categories', [CategoryController::class, 'userCategories']); // Route pour les catégories de l'utilisateur connecté
-    Route::get('/categories/{category}/themes', [ThemeController::class, 'index']);
+    Route::get('/user/categories', [CategoryController::class, 'userCategories']); 
     Route::resource('themes', ThemeController::class)->except(['index']);
     Route::get('/themes', [ThemeController::class, 'allThemes']);
     Route::get('/themes/{theme}/cards', [CardController::class, 'index']);
