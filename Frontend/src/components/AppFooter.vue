@@ -16,7 +16,7 @@
     <div
       class="w-full max-w-4xl mt-6 border-t border-gray-200 pt-4 text-center text-sm text-gray-200"
     >
-      &copy; 2024 Project Memory. Tous droits réservés.
+      &copy; 2024 Memo Card. Tous droits réservés.
     </div>
   </footer>
 </template>

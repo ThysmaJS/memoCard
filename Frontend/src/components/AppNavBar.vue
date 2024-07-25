@@ -18,7 +18,7 @@ const logout = () => {
 
 <template>
   <header class="bg-opacity-10 p-4 flex justify-between items-center bg-white shadow-lg rounded-lg">
-    <div class="text-xl font-bold text-white">Project Memory</div>
+    <div class="text-xl font-bold text-white">Memo Card</div>
     <button v-if="!isOpen" @click="toggleMenu" class="lg:hidden fixed top-4 right-4 z-50">
       <svg
         class="w-6 h-6 text-white"

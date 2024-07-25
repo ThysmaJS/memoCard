@@ -3,7 +3,7 @@
     class="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-blue-400 to-green-400 text-white"
   >
     <div class="w-full max-w-md p-8 bg-white bg-opacity-10 rounded-lg shadow-lg backdrop-blur-md">
-      <h2 class="text-4xl font-bold mb-6 text-white text-center">Login</h2>
+      <h2 class="text-4xl font-bold mb-6 text-white text-center">Connexion</h2>
 
       <form @submit.prevent="login" class="space-y-4">
         <div class="form-group">
@@ -16,7 +16,7 @@
         </div>
 
         <div class="form-group">
-          <label for="password" class="block text-lg font-medium text-white">Password</label>
+          <label for="password" class="block text-lg font-medium text-white">Mot de passe</label>
           <input
             type="password"
             v-model="user.password"
@@ -28,7 +28,7 @@
           type="submit"
           class="w-full py-2 px-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
         >
-          Login
+          Se connecter
         </button>
       </form>
     </div>

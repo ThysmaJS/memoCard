@@ -5,10 +5,10 @@
     <div
       class="w-full max-w-lg p-10 bg-white bg-opacity-10 rounded-lg shadow-lg backdrop-blur-md sm:max-w-2xl"
     >
-      <h1 class="text-4xl font-bold mb-6 text-white sm:text-5xl text-center">Register Form</h1>
+      <h1 class="text-4xl font-bold mb-6 text-white sm:text-5xl text-center">Inscription</h1>
       <form @submit.prevent="saveData" class="space-y-4">
         <div>
-          <label for="name" class="block text-lg font-medium text-white">First Name</label>
+          <label for="name" class="block text-lg font-medium text-white">Pseudo</label>
           <input
             type="text"
             v-model="users.name"
@@ -28,7 +28,7 @@
           />
         </div>
         <div>
-          <label for="password" class="block text-lg font-medium text-white">Password</label>
+          <label for="password" class="block text-lg font-medium text-white">Mot de passe</label>
           <input
             type="password"
             v-model="users.password"
@@ -40,7 +40,7 @@
         <div>
           <input
             type="submit"
-            value="Save"
+            value="S'inscrire"
             class="btn btn-success w-full py-2 px-4 bg-green-500 hover:bg-green-600 text-white font-bold rounded-full transition duration-300 ease-in-out transform hover:scale-105 cursor-pointer"
           />
         </div>
